@@ -1,0 +1,35 @@
+---
+title: "Regional Happiness Scores"
+author: "Tejas Mundhe"
+date: "6/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+```{r, echo = FALSE}
+hap_data <- read.csv("world-happiness-report-2021.csv")
+
+hap_data %>%
+  rename(country = "ï..Country.name", region = "Regional.indicator", 
+         ladder = "Ladder.score", gdp = "Logged.GDP.per.capita") %>%
+  select(country, region, ladder, gdp) %>%
+  group_by(region) %>%
+  mutate(mean_ladder = mean(ladder)) %>%
+  pivot_longer(names_to = "metric", values_to = "value", cols = "mean_ladder") %>%
+  ggplot(aes(x = region, y = value, fill = region)) +
+  geom_col() +
+  theme(axis.text.x=element_blank()) +
+  labs(title = "Happiness Scores by Region",
+       subtitle = "North America and Western Europe dominate",
+       x = "Region",
+       y = "Happiness Score",
+       fill = "Region",
+       caption = "Source: World Happiness Report (2021)")
+
+  
+```
+
+
